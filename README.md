@@ -1,2 +1,2 @@
 # dollop
-dollop - a tiny tool to resolve
+dollop - Ebitengine Format Design Packages

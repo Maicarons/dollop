@@ -1,0 +1,5 @@
+package check
+
+func main() {
+
+}
