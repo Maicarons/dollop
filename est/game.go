@@ -7,8 +7,20 @@ import (
 
 type Game struct {
 	Scene       []*Scene
+	SceneIndex  uint
+	NowScene    *Scene
 	RootObject  *Object
 	GameSetting *GameSetting
+}
+
+func (g *Game) ChooseScene(Index uint) {
+	for _, scene := range g.Scene {
+		if scene.Index == Index {
+			g.NowScene = scene
+			g.SceneIndex = Index
+			return
+		}
+	}
 }
 
 func NewGame(scene []*Scene, rootObject *Object, gameSetting *GameSetting) *Game {
@@ -16,12 +28,15 @@ func NewGame(scene []*Scene, rootObject *Object, gameSetting *GameSetting) *Game
 }
 
 func (g *Game) Update() error {
-
+	err := g.NowScene.Update()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-
+	g.NowScene.Draw(screen)
 }
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
 	return int(g.GameSetting.Settings.ScreenSize[0]), int(g.GameSetting.Settings.ScreenSize[1])
