@@ -6,15 +6,16 @@ import (
 )
 
 type Game struct {
-	Scene       []*Scene
+	Scene       []Scene
 	SceneIndex  uint
-	NowScene    *Scene
-	RootObject  *Object
-	GameSetting *GameSetting
+	NowScene    Scene
+	RootObject  Object
+	GameSetting GameSetting
 }
 
 func (g *Game) ChooseScene(Index uint) {
-	for _, scene := range g.Scene {
+	a := g.Scene
+	for _, scene := range a {
 		if scene.Index == Index {
 			g.NowScene = scene
 			g.SceneIndex = Index
@@ -23,7 +24,7 @@ func (g *Game) ChooseScene(Index uint) {
 	}
 }
 
-func NewGame(scene []*Scene, rootObject *Object, gameSetting *GameSetting) *Game {
+func NewGame(scene []Scene, rootObject Object, gameSetting GameSetting) *Game {
 	return &Game{Scene: scene, RootObject: rootObject, GameSetting: gameSetting}
 }
 
@@ -50,7 +51,7 @@ func (g *Game) SceneSort() {
 	}
 }
 
-func bubbleSort(arr []*Scene) {
+func bubbleSort(arr []Scene) {
 	n := len(arr)
 	for i := 0; i < n-1; i++ { // 外层循环控制排序轮数
 		for j := 0; j < n-i-1; j++ { // 内层循环控制每轮比较次数

@@ -7,7 +7,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"image/color"
 	"log"
+	"runtime"
 )
+
+var P1 = ebiten.NewImage(100, 100)
 
 func main() {
 	TestCheck()
@@ -15,8 +18,9 @@ func main() {
 }
 
 func TestCheck() {
-	ebiten.SetTPS(100)
+
 	ebitengine, s2, err := check.Ebitengine()
+
 	if err != nil {
 		fmt.Printf("%v\n%v\n%s", ebitengine, s2, err.Error())
 		return
@@ -28,14 +32,21 @@ func TestCheck() {
 		return
 	}
 	fmt.Printf("%v %v\n", b, s)
+	runtime.GC()
+
 }
 
 func TestEst() {
-	p1 := ebiten.NewImage(100, 100)
-	p1.Fill(color.RGBA{R: 255, G: 0, B: 0, A: 255})
-	o1 := est.NewObject(p1)
-	s1 := est.NewScene([]*est.Object{o1, o1, o1, o1}, 1)
-	s2 := est.NewScene([]*est.Object{o1, o1, o1, o1}, 2)
+	ebiten.SetTPS(10)
+	ebiten.SetWindowDecorated(true)
+	ebiten.SetRunnableOnUnfocused(true)
+	ebiten.SetWindowSize(640, 480)
+
+	P1.Fill(color.RGBA{R: 255, G: 0, B: 0, A: 255})
+	o1 := est.NewObject(P1)
+	c := []est.Object{*o1, *o1, *o1, *o1}
+	s1 := est.NewScene(c, 1)
+	s2 := est.NewScene(c, 2)
 	settingjson := `
     {"info": {
         "GameName": "test",
@@ -76,8 +87,8 @@ func TestEst() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	g1 := est.NewGame([]*est.Scene{s1, s2}, o1, &setting)
-	err = ebiten.RunGame(g1)
+	g1 := est.NewGame([]est.Scene{*s1, *s2}, *o1, setting)
+	err = g1.GameStart()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
